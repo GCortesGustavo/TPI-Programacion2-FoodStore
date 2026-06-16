@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package TiendaService;
+package services;
+import dao.UsuarioDAO;
 import entities.*;
 import enums.*;
 import exception.ExceptionsMenu;
@@ -11,26 +12,24 @@ import java.util.ArrayList;
 import java.util.List;
 /**
  *
- * @author Santiago Villalba
+ * @author Villalba - Cortés - Lorenzo Flores
  */
 public class TiendaService {
-    // Colecciones en memoria
-    private List<Categoria> categorias = new ArrayList<>();
-    private List<Producto> productos = new ArrayList<>();
-    private List<Usuario> usuarios = new ArrayList<>();
-    private List<Pedido> pedidos = new ArrayList<>();
+    private UsuarioDAO usuarioDao = new usuarioDAO();
 
     //========== METO CONTADORES PARA INCREMENTAR LAS ID =========================
     private int catId = 1, prodId = 1, userId = 1, pedId = 1;
 
     //========== TIRA ERROR SI EL MAIL ES IGUAL AL QUE YA ESTA REGISTRADO ========
     public void crearUsuario(String nombre, String email, EnumsRol rol) throws ExceptionsMenu {
-        for (Usuario u : usuarios) {
-            if (!u.isEliminado() && u.getEmail().equalsIgnoreCase(email)) {
-                throw new ExceptionsMenu("Error: El email '" + email + "' ya está registrado.");
-            }
+        // 1. Lógica de negocio: Validar si el mail ya existe en la DB
+        if (usuarioDAO.buscarPorEmail(email) != null) {
+            throw new ExceptionsMenu("Error: El email '" + email + "' ya está registrado.");
         }
-        usuarios.add(new Usuario(userId++, nombre, email, rol));
+        
+        // 2. Crear el objeto y mandarlo al DAO para que lo guarde en MySQL
+        Usuario nuevo = new Usuario(nombre, email, rol);
+        usuarioDAO.guardar(nuevo);
     }
 
     public List<Usuario> listarUsuarios() {
@@ -48,7 +47,7 @@ public class TiendaService {
         throw new ExceptionsMenu("Usuario no encontrado.");
     }
 
-    public void eliminarUsuario(int id) throws ExceptionsMenu {
+    public void eliminarUsuario(long id) throws ExceptionsMenu {
         Usuario u = buscarUsuario(id);
         u.setEliminado(true); // Soft delete
     }
@@ -107,5 +106,9 @@ public class TiendaService {
         
         producto.setStock(producto.getStock() - cantidad);
         pedido.agregarDetalle(new DetallePedido(producto, cantidad));
+    }
+
+    public void eliminarCategoria(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

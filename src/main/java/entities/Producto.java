@@ -6,33 +6,23 @@ package entities;
 
 /**
  *
- * @author Santiago Villalba
+ * @author Villalba - Cortés - Lorenzo Flores
  */
-public class Producto {
-    private int id;
+public class Producto extends Base {
     private String nombre;
     private double precio;
     private int stock;
     private Categoria categoria;
-    private boolean eliminado;
 
-    public Producto(int id, String nombre, double precio, int stock, Categoria categoria) {
-        this.id = id;
+    public Producto(String nombre, double precio, int stock, Categoria categoria) {
+        super();
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
         this.categoria = categoria;
-        this.eliminado = false;
     }
     
     //=================GETTERS Y SETTERS=============================
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNombre() {
         return nombre;
@@ -64,15 +54,6 @@ public class Producto {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
-    }
-
-    public boolean isEliminado() {
-        return eliminado;
-    }
-
-    
-    public void setEliminado(boolean eliminado) {    
-        this.eliminado = eliminado;
     }
 
     //=================TERMINAN LOS GETTERS Y SETTERS=============================

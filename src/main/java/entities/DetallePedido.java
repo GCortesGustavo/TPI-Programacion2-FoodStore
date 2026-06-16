@@ -6,14 +6,15 @@ package entities;
 
 /**
  *
- * @author Santiago Villalba
+ * @author Villalba - Cortés - Lorenzo Flores
  */
-public class DetallePedido {
+public class DetallePedido extends Base {
     private Producto producto;
     private int cantidad;
     private double precioUnitario;
 
     public DetallePedido(Producto producto, int cantidad) {
+        super();
         this.producto = producto;
         this.cantidad = cantidad;
         this.precioUnitario = producto.getPrecio();
@@ -32,6 +33,19 @@ public class DetallePedido {
     public double getPrecioUnitario() {
         return precioUnitario;
     }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public void setPrecioUnitario(double precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+    
 
     public double getSubtotal() {
         return cantidad * precioUnitario;

@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package entities;
+
 import enums.EnumsEstado;
 import enums.EnumsFormaDePago;
 import java.util.ArrayList;
@@ -10,23 +11,20 @@ import java.util.List;
 
 /**
  *
- * @author Santiago Villalba
+ * @author Villalba - Cortés - Lorenzo Flores
  */
-public class Pedido {
-    private int id;
+public class Pedido extends Base implements Calculable {
+
     private Usuario usuario;
-    private List<DetallePedido> detalles;
+    private List<DetallePedido> detalles = new ArrayList<>();
     private EnumsEstado estado;
     private EnumsFormaDePago formaPago;
-    private boolean eliminado;
 
-    public Pedido(int id, Usuario usuario, EnumsFormaDePago formaPago) {
-        this.id = id;
+    public Pedido(Usuario usuario, EnumsFormaDePago formaPago) {
+        super();
         this.usuario = usuario;
         this.formaPago = formaPago;
         this.estado = EnumsEstado.PENDIENTE;
-        this.detalles = new ArrayList<>();
-        this.eliminado = false;
     }
 
     public void agregarDetalle(DetallePedido detalle) {
@@ -41,16 +39,7 @@ public class Pedido {
         return total;
     }
 
-     //=================== GETTERS Y SETTERS=======================
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    //=================== GETTERS Y SETTERS=======================
     public Usuario getUsuario() {
         return usuario;
     }
@@ -79,19 +68,14 @@ public class Pedido {
         this.formaPago = formaPago;
     }
 
-    public boolean isEliminado() {
-        return eliminado;
-    }
-
-    public void setEliminado(boolean eliminado) {
-        this.eliminado = eliminado;
-    }
-    
     //===================TERMINAN LOS GETTERS Y SETTERS=======================
-
-
     @Override
     public String toString() {
         return "Pedido #" + id + " | Usuario: " + usuario.getNombre() + " | Estado: " + estado + " | Total: $" + getTotal();
+    }
+
+    @Override
+    public double calcularTotal() {
+        return detalles.stream().mapToDouble(DetallePedido::getSubtotal).sum();
     }
 }
