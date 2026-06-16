@@ -4,13 +4,20 @@
 
 package com.foodstore;
 
+import TiendaService.TiendaService;
 import config.ConexionDB;
+import java.util.Scanner;
+import enums.EnumsRol;
+import exception.ExceptionsMenu;
+import entities.*;
 
 /**
  *
  * @author Usuario
  */
 public class Main {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final TiendaService service = new TiendaService();
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
@@ -19,5 +26,137 @@ public class Main {
         } catch (Exception error) {
             System.out.println("Error" + error.getMessage());
         }
+        
+        //==============LE METO UNOS DATITOS DE PRUEBA JE=============
+        service.crearCategoria("Bebidas");
+        service.crearCategoria("Comidas");
+
+        int opcion = -1; 
+
+        while (opcion != 0) {
+            System.out.println("\n=== SISTEMA DE PEDIDOS (FOOD STORE) ===");
+            System.out.println("1. Categorías");
+            System.out.println("2. Productos");
+            System.out.println("3. Usuarios");
+            System.out.println("4. Pedidos");
+            System.out.println("0. Salir");
+            
+            opcion = leerEntero("Seleccione: ");
+
+            if (opcion == 1) {
+                menuCategorias();
+            } else if (opcion == 2) {
+                menuProductos();
+            } else if (opcion == 3) {
+                menuUsuarios();
+            } else if (opcion == 4) {
+                System.out.println("Menú Pedidos (LE TOCA AL JORGE CREO)");
+            } else if (opcion == 0) {
+                System.out.println("Saliendo...");
+            } else {
+                System.out.println("Opción no válida.");
+            }
+        }
     }
+
+    
+    private static void menuCategorias() {
+        int opcion = -1;
+        
+        while (opcion != 0) {
+            System.out.println("\n--- GESTIÓN DE CATEGORÍAS ---");
+            System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
+            opcion = leerEntero("Seleccione: ");
+
+            try {
+                if (opcion == 1) {
+                    
+                    for (Categoria c : service.listarCategorias()) {
+                        System.out.println(c.toString());
+                    }
+                } else if (opcion == 2) {
+                    String nom = leerString("Nombre de la categoría: ");
+                    service.crearCategoria(nom);
+                    System.out.println("¡Categoría creada con éxito!");
+                } else if (opcion == 3 || opcion == 4) {
+                    System.out.println("Edición/Eliminación (A completar por tus compañeros)");
+                } else if (opcion == 0) {
+                    
+                } else {
+                    System.out.println("Opción incorrecta.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+            }
+        }
+    }
+
+    private static void menuUsuarios() {
+        int opcion = -1;
+        
+        while (opcion != 0) {
+            System.out.println("\n--- GESTIÓN DE USUARIOS ---");
+            System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
+            opcion = leerEntero("Seleccione: ");
+
+            try {
+                if (opcion == 1) {
+                    for (Usuario u : service.listarUsuarios()) {
+                        System.out.println(u.toString());
+                    }
+                } else if (opcion == 2) {
+                    String nom = leerString("Nombre: ");
+                    String email = leerString("Email: ");
+                    service.crearUsuario(nom, email, EnumsRol.CLIENTE);
+                    System.out.println("¡Usuario creado con éxito!");
+                } else if (opcion == 4) {
+                    
+                    for (Usuario u : service.listarUsuarios()) {
+                        System.out.println(u.toString());
+                    }
+                    int id = leerEntero("ID a eliminar: ");
+                    service.eliminarUsuario(id);
+                    System.out.println("¡Usuario eliminado (Soft Delete)!");
+                } else if (opcion == 0) {
+ 
+                } else {
+                    System.out.println("Opción incorrecta.");
+                }
+            } catch (ExceptionsMenu e) {
+    
+                System.out.println(e.getMessage()); 
+            }
+        }
+    }
+
+    private static void menuProductos() {
+        System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
+        System.out.println("(Menú a completar por tus compañeros basándose en los anteriores)");
+    }
+
+
+    private static int leerEntero(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                return Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Por favor ingrese un número válido.");
+            }
+        }
+    }
+
+    private static String leerString(String mensaje) {
+        String texto = "";
+        while (texto.isEmpty()) {
+            System.out.print(mensaje);
+            texto = scanner.nextLine().trim();
+        }
+        return texto;
+    }
+        
+        
+        
+        
 }
+
