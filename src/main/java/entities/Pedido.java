@@ -6,6 +6,7 @@ package entities;
 
 import enums.EnumsEstado;
 import enums.EnumsFormaDePago;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,23 +15,30 @@ import java.util.List;
  * @author Villalba - Cortés - Lorenzo Flores
  */
 public class Pedido extends Base implements Calculable {
-
+    private LocalDate fecha;
     private Usuario usuario;
     private List<DetallePedido> detalles = new ArrayList<>();
     private EnumsEstado estado;
     private EnumsFormaDePago formaPago;
+    private double total;
+    
 
     public Pedido(Usuario usuario, EnumsFormaDePago formaPago) {
         super();
+        this.fecha = LocalDate.now();
         this.usuario = usuario;
         this.formaPago = formaPago;
         this.estado = EnumsEstado.PENDIENTE;
+        this.detalles = new ArrayList<>();
+        this.total = 0.0;
     }
 
-    public void agregarDetalle(DetallePedido detalle) {
+    public void addDetallePedido(DetallePedido detalle) {
         this.detalles.add(detalle);
+        this.total = calcularTotal();
     }
 
+    //=================== GETTERS Y SETTERS=======================
     public double getTotal() {
         double total = 0;
         for (DetallePedido dp : detalles) {
@@ -39,7 +47,6 @@ public class Pedido extends Base implements Calculable {
         return total;
     }
 
-    //=================== GETTERS Y SETTERS=======================
     public Usuario getUsuario() {
         return usuario;
     }
@@ -68,6 +75,12 @@ public class Pedido extends Base implements Calculable {
         this.formaPago = formaPago;
     }
 
+    public LocalDate getFecha() {
+        return fecha;
+    }
+    
+    
+
     //===================TERMINAN LOS GETTERS Y SETTERS=======================
     @Override
     public String toString() {
@@ -76,6 +89,10 @@ public class Pedido extends Base implements Calculable {
 
     @Override
     public double calcularTotal() {
-        return detalles.stream().mapToDouble(DetallePedido::getSubtotal).sum();
+        double acumulado = 0;
+        for(DetallePedido dp : detalles){
+            acumulado += dp.getSubtotal();
+        }
+        return acumulado;
     }
 }

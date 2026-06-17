@@ -16,18 +16,19 @@ import java.sql.SQLException;
  * @author Villalba, Cortés, Lorenzo , Flores
  */
 public class Main {
-
-    private static final Scanner scanner = new Scanner(System.in);
+   private static final Scanner scanner = new Scanner(System.in);
     private static final TiendaService service = new TiendaService();
 
     public static void main(String[] args) {
+        // 1. Intento de conexión inicial
         try {
             ConexionDB.getConnection();
-            System.out.println("FoodStore iniciado correctamente");
+            System.out.println("✅ FoodStore iniciado correctamente.");
         } catch (SQLException error) {
-            System.out.println("Error" + error.getMessage());
+            System.out.println("❌ Error de conexión: " + error.getMessage());
         }
 
+        // 2. Bucle principal del menú
         int opcion = -1;
 
         while (opcion != 0) {
@@ -47,7 +48,7 @@ public class Main {
             } else if (opcion == 3) {
                 menuUsuarios();
             } else if (opcion == 4) {
-                System.out.println("Menú Pedidos (LE TOCA AL JORGE CREO)");
+                System.out.println("Menú Pedidos (Lógica de Jorge/PM)");
             } else if (opcion == 0) {
                 System.out.println("Saliendo...");
             } else {
@@ -58,7 +59,6 @@ public class Main {
 
     private static void menuCategorias() {
         int opcion = -1;
-
         while (opcion != 0) {
             System.out.println("\n--- GESTIÓN DE CATEGORÍAS ---");
             System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
@@ -73,24 +73,23 @@ public class Main {
                     String nom = leerString("Nombre de la categoría: ");
                     service.crearCategoria(nom);
                     System.out.println("¡Categoría creada con éxito!");
-                } else if (opcion == 3 || opcion == 4) {
+                } else if (opcion == 4) {
                     Long id = leerLong("Ingrese ID de categoría a eliminar: ");
                     service.eliminarCategoria(id);
                     System.out.println("¡Categoría eliminada!");
                 } else if (opcion == 0) {
-                    // volver
+                    // Volver
                 } else {
                     System.out.println("Opción incorrecta.");
                 }
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
 
     private static void menuUsuarios() {
         int opcion = -1;
-
         while (opcion != 0) {
             System.out.println("\n--- GESTIÓN DE USUARIOS ---");
             System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
@@ -110,13 +109,8 @@ public class Main {
                     Long id = leerLong("ID de usuario a eliminar: ");
                     service.eliminarUsuario(id);
                     System.out.println("¡Usuario eliminado (Soft Delete)!");
-                } else if (opcion == 0) {
-                    //volver
-                } else {
-                    System.out.println("Opción incorrecta.");
                 }
             } catch (ExceptionsMenu e) {
-
                 System.out.println(e.getMessage());
             }
         }
@@ -124,8 +118,10 @@ public class Main {
 
     private static void menuProductos() {
         System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
-        System.out.println("(Menú a completar por tus compañeros basándose en los anteriores)");
+        System.out.println("(A completar basándose en los anteriores)");
     }
+
+    // --- MÉTODOS DE ENTRADA DE DATOS ---
 
     private static int leerEntero(String mensaje) {
         while (true) {
@@ -133,7 +129,7 @@ public class Main {
                 System.out.print(mensaje);
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Error: Por favor ingrese un número válido.");
+                System.out.println("Error: Por favor ingrese un número entero válido.");
             }
         }
     }
