@@ -16,17 +16,13 @@ import java.util.List;
  */
 public class CategoriaDAO implements DAO<Categoria> {
 
-@Override
-    public void guardar(Categoria cat) throws SQLException {
+    @Override
+    public void guardar(Categoria cat) throws Exception {
         String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
-        try (Connection con = ConexionDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+        try (Connection con = ConexionDB.getConnection(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, cat.getNombre());
             ps.setString(2, cat.getDescripcion());
             ps.executeUpdate();
-
-            // Esto recupera el ID que generó la base de datos automáticamente
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 cat.setId(rs.getLong(1));
@@ -35,17 +31,16 @@ public class CategoriaDAO implements DAO<Categoria> {
     }
 
     @Override
-    public List<Categoria> listarTodos() throws SQLException {
+    public List<Categoria> listarTodos() throws Exception {
         List<Categoria> lista = new ArrayList<>();
         String sql = "SELECT * FROM categorias WHERE eliminado = false";
-        
-        try (Connection con = ConexionDB.getConnection();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            
+        try (Connection con = ConexionDB.getConnection(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
-                Categoria c = new Categoria(rs.getString("nombre"), rs.getString("descripcion"));
-                c.setId(rs.getLong("id"));
+                Categoria c = new Categoria(
+                        rs.getLong("id"),
+                        rs.getString("nombre"),
+                        rs.getString("descripcion")
+                );
                 c.setEliminado(rs.getBoolean("eliminado"));
                 lista.add(c);
             }
@@ -54,16 +49,15 @@ public class CategoriaDAO implements DAO<Categoria> {
     }
 
     @Override
-    public void eliminar(Long id) throws SQLException {
+    public void eliminar(Long id) throws Exception {
         // BAJA LÓGICA (Soft Delete) como pide la rúbrica
         String sql = "UPDATE categorias SET eliminado = true WHERE id = ?";
-        try (Connection con = ConexionDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = ConexionDB.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, id);
             ps.executeUpdate();
         }
     }
-    
+
     @Override
     public void modificar(Categoria t) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

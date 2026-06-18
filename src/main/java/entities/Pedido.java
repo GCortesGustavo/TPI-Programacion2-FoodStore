@@ -34,9 +34,28 @@ public class Pedido extends Base implements Calculable {
         this.total = 0.0;
     }
 
-    public void addDetallePedido(DetallePedido detalle) {
-        this.detalles.add(detalle);
+    public void addDetallePedido(int cantidad, Double subtotal, Producto producto) {
+        DetallePedido nuevoDetalle = new DetallePedido(producto, cantidad);
+        this.detalles.add(nuevoDetalle);
         this.total = calcularTotal();
+    }
+
+    
+    public DetallePedido findDetallePedidoByProducto(Producto producto) {
+        for (DetallePedido dp : detalles) {
+            if (dp.getProducto().getId().equals(producto.getId())) {
+                return dp;
+            }
+        }
+        return null;
+    }
+
+    public void deleteDetallePedidoByProducto(Producto producto) {
+        DetallePedido aEliminar = findDetallePedidoByProducto(producto);
+        if (aEliminar != null) {
+            this.detalles.remove(aEliminar);
+            this.total = calcularTotal();
+        }
     }
 
     //=================== GETTERS Y SETTERS=======================
@@ -81,7 +100,7 @@ public class Pedido extends Base implements Calculable {
     }
 
     public void setFecha(LocalDate toLocalDate) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        this.fecha = toLocalDate;
     }
 
     //===================TERMINAN LOS GETTERS Y SETTERS=======================

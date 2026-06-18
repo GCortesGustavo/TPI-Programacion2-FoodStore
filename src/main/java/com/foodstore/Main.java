@@ -9,7 +9,6 @@ import java.util.Scanner;
 import enums.EnumsRol;
 import exception.ExceptionsMenu;
 import entities.*;
-import java.sql.SQLException;
 
 /**
  *
@@ -26,7 +25,7 @@ public class Main {
         try {
             ConexionDB.getConnection();
             System.out.println("FoodStore iniciado correctamente.");
-        } catch (SQLException error) {
+        } catch (Exception error) {
             System.out.println("Error de conexión: " + error.getMessage());
         }
 
@@ -74,7 +73,7 @@ public class Main {
                     }
                 } else if (opcion == 2) {
                     Long id = leerLong("Ingrese ID del pedido a modificar: ");
-                    System.out.println("Estados: 1. PENDIENTE | 2. PREPARACION | 3. ENVIADO | 4. ENTREGADO | 5. CANCELADO");
+                    System.out.println("Estados: 1. PENDIENTE | 2. PREPARACION | 3. ENTREGADO | 4. CANCELADO");
                     int est = leerEntero("Seleccione nuevo estado: ");
 
                     enums.EnumsEstado nuevoEstado = enums.EnumsEstado.PENDIENTE;
@@ -85,14 +84,12 @@ public class Main {
                         nuevoEstado = enums.EnumsEstado.PREPARACION;
                     }
                     if (est == 3) {
-                        nuevoEstado = enums.EnumsEstado.ENVIADO;
-                    }
-                    if (est == 4) {
                         nuevoEstado = enums.EnumsEstado.ENTREGADO;
                     }
-                    if (est == 5){
+                    if (est == 4) {
                         nuevoEstado = enums.EnumsEstado.CANCELADO;
                     }
+
 
                     pedidoService.cambiarEstadoPedido(id, nuevoEstado);
                     System.out.println("Estado actualizado.");

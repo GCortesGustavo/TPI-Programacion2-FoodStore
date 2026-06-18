@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence>
+    <connection>
+        <url>jdbc:mysql://localhost:3306/food_store?useSSL=false&amp;serverTimezone=UTC</url>
+        <user>root</user>
+        <password>admin123</password>
+        <driver>com.mysql.cj.jdbc.Driver</driver>
+    </connection>
+</persistence>

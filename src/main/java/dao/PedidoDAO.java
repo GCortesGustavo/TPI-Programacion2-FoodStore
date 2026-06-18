@@ -42,7 +42,7 @@ public class PedidoDAO {
         return null;
     }
 
-    public List<Pedido> listarTodos() throws SQLException {
+    public List<Pedido> listarTodos() throws Exception {
         List<Pedido> lista = new ArrayList<>();
         String sql = "SELECT p.*, u.nombre as nombre_usuario FROM pedidos p "
                 + "JOIN usuarios u ON p.usuario_id = u.id "
@@ -66,7 +66,7 @@ public class PedidoDAO {
         return lista;
     }
 
-    public void actualizarEstado(Long id, enums.EnumsEstado nuevoEstado) throws SQLException {
+    public void actualizarEstado(Long id, enums.EnumsEstado nuevoEstado) throws Exception {
         String sql = "UPDATE pedidos SET estado = ? WHERE id = ?";
         try (Connection con = ConexionDB.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, nuevoEstado.name());
@@ -75,7 +75,7 @@ public class PedidoDAO {
         }
     }
 
-    public void eliminar(Long id) throws SQLException {
+    public void eliminar(Long id) throws Exception {
         String sql = "UPDATE pedidos SET eliminado = true WHERE id = ?";
         try (Connection con = ConexionDB.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, id);
