@@ -6,6 +6,7 @@ import dao.PedidoDAO;
 import entities.DetallePedido;
 import entities.Pedido;
 import java.sql.Connection;
+import java.util.List;
 
 /**
  *
@@ -46,5 +47,17 @@ public class PedidoService {
                 con.setAutoCommit(true);
             }
         }
+    }
+
+    public List<Pedido> obtenerTodosLosPedidos() throws Exception {
+        return pedidoDAO.listarTodos(); 
+    }
+
+    public void cambiarEstadoPedido(Long id, enums.EnumsEstado nuevoEstado) throws Exception {
+        pedidoDAO.actualizarEstado(id, nuevoEstado);
+    }
+
+    public void darDeBajaPedido(Long id) throws Exception {
+        pedidoDAO.eliminar(id);
     }
 }

@@ -16,16 +16,18 @@ import java.sql.SQLException;
  * @author Villalba, Cortés, Lorenzo , Flores
  */
 public class Main {
-   private static final Scanner scanner = new Scanner(System.in);
+
+    private static final services.PedidoService pedidoService = new services.PedidoService();
+    private static final Scanner scanner = new Scanner(System.in);
     private static final TiendaService service = new TiendaService();
 
     public static void main(String[] args) {
         // 1. Intento de conexión inicial
         try {
             ConexionDB.getConnection();
-            System.out.println("✅ FoodStore iniciado correctamente.");
+            System.out.println("FoodStore iniciado correctamente.");
         } catch (SQLException error) {
-            System.out.println("❌ Error de conexión: " + error.getMessage());
+            System.out.println("Error de conexión: " + error.getMessage());
         }
 
         // 2. Bucle principal del menú
@@ -48,11 +50,64 @@ public class Main {
             } else if (opcion == 3) {
                 menuUsuarios();
             } else if (opcion == 4) {
-                System.out.println("Menú Pedidos (Lógica de Jorge/PM)");
+                menuPedidos();
             } else if (opcion == 0) {
                 System.out.println("Saliendo...");
             } else {
                 System.out.println("Opción no válida.");
+            }
+        }
+    }
+
+    private static void menuPedidos() {
+        int opcion = -1;
+        while (opcion != 0) {
+            System.out.println("\n--- GESTIÓN DE PEDIDOS ---");
+            System.out.println("1. Listar Pedidos | 2. Cambiar Estado | 3. Eliminar (Baja Lógica) | 0. Volver");
+            opcion = leerEntero("Seleccione: ");
+
+            try {
+                if (opcion == 1) {
+                    System.out.println("\n--- LISTADO DE PEDIDOS ACTIVOS ---");
+                    for (Pedido p : pedidoService.obtenerTodosLosPedidos()) {
+                        System.out.println(p.toString());
+                    }
+                } else if (opcion == 2) {
+                    Long id = leerLong("Ingrese ID del pedido a modificar: ");
+                    System.out.println("Estados: 1. PENDIENTE | 2. PREPARACION | 3. ENVIADO | 4. ENTREGADO | 5. CANCELADO");
+                    int est = leerEntero("Seleccione nuevo estado: ");
+
+                    enums.EnumsEstado nuevoEstado = enums.EnumsEstado.PENDIENTE;
+                    if (est == 1) {
+                        nuevoEstado = enums.EnumsEstado.PENDIENTE;
+                    }
+                    if (est == 2) {
+                        nuevoEstado = enums.EnumsEstado.PREPARACION;
+                    }
+                    if (est == 3) {
+                        nuevoEstado = enums.EnumsEstado.ENVIADO;
+                    }
+                    if (est == 4) {
+                        nuevoEstado = enums.EnumsEstado.ENTREGADO;
+                    }
+                    if (est == 5){
+                        nuevoEstado = enums.EnumsEstado.CANCELADO;
+                    }
+
+                    pedidoService.cambiarEstadoPedido(id, nuevoEstado);
+                    System.out.println("Estado actualizado.");
+
+                } else if (opcion == 3) {
+                    
+                    Long id = leerLong("Ingrese ID del pedido a eliminar: ");
+                    pedidoService.darDeBajaPedido(id);
+                    System.out.println("Pedido eliminado (Baja Lógica).");
+
+                } else if (opcion == 0) {
+                    // Volver
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
@@ -122,7 +177,6 @@ public class Main {
     }
 
     // --- MÉTODOS DE ENTRADA DE DATOS ---
-
     private static int leerEntero(String mensaje) {
         while (true) {
             try {

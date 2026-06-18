@@ -6,6 +6,7 @@ package entities;
 
 import enums.EnumsEstado;
 import enums.EnumsFormaDePago;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +16,13 @@ import java.util.List;
  * @author Villalba - Cortés - Lorenzo Flores
  */
 public class Pedido extends Base implements Calculable {
+
     private LocalDate fecha;
     private Usuario usuario;
     private List<DetallePedido> detalles = new ArrayList<>();
     private EnumsEstado estado;
     private EnumsFormaDePago formaPago;
     private double total;
-    
 
     public Pedido(Usuario usuario, EnumsFormaDePago formaPago) {
         super();
@@ -78,8 +79,10 @@ public class Pedido extends Base implements Calculable {
     public LocalDate getFecha() {
         return fecha;
     }
-    
-    
+
+    public void setFecha(LocalDate toLocalDate) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     //===================TERMINAN LOS GETTERS Y SETTERS=======================
     @Override
@@ -90,7 +93,7 @@ public class Pedido extends Base implements Calculable {
     @Override
     public double calcularTotal() {
         double acumulado = 0;
-        for(DetallePedido dp : detalles){
+        for (DetallePedido dp : detalles) {
             acumulado += dp.getSubtotal();
         }
         return acumulado;
