@@ -17,17 +17,20 @@ import java.sql.SQLException;
  */
 public class Main {
 
+    private static final services.PedidoService pedidoService = new services.PedidoService();
     private static final Scanner scanner = new Scanner(System.in);
     private static final TiendaService service = new TiendaService();
 
     public static void main(String[] args) {
+        // 1. Intento de conexión inicial
         try {
             ConexionDB.getConnection();
-            System.out.println("FoodStore iniciado correctamente");
+            System.out.println("FoodStore iniciado correctamente.");
         } catch (SQLException error) {
-            System.out.println("Error" + error.getMessage());
+            System.out.println("Error de conexión: " + error.getMessage());
         }
 
+        // 2. Bucle principal del menú
         int opcion = -1;
 
         while (opcion != 0) {
@@ -47,7 +50,7 @@ public class Main {
             } else if (opcion == 3) {
                 menuUsuarios();
             } else if (opcion == 4) {
-                System.out.println("Menú Pedidos (LE TOCA AL JORGE CREO)");
+                menuPedidos();
             } else if (opcion == 0) {
                 System.out.println("Saliendo...");
             } else {
@@ -56,9 +59,61 @@ public class Main {
         }
     }
 
+    private static void menuPedidos() {
+        int opcion = -1;
+        while (opcion != 0) {
+            System.out.println("\n--- GESTIÓN DE PEDIDOS ---");
+            System.out.println("1. Listar Pedidos | 2. Cambiar Estado | 3. Eliminar (Baja Lógica) | 0. Volver");
+            opcion = leerEntero("Seleccione: ");
+
+            try {
+                if (opcion == 1) {
+                    System.out.println("\n--- LISTADO DE PEDIDOS ACTIVOS ---");
+                    for (Pedido p : pedidoService.obtenerTodosLosPedidos()) {
+                        System.out.println(p.toString());
+                    }
+                } else if (opcion == 2) {
+                    Long id = leerLong("Ingrese ID del pedido a modificar: ");
+                    System.out.println("Estados: 1. PENDIENTE | 2. PREPARACION | 3. ENVIADO | 4. ENTREGADO | 5. CANCELADO");
+                    int est = leerEntero("Seleccione nuevo estado: ");
+
+                    enums.EnumsEstado nuevoEstado = enums.EnumsEstado.PENDIENTE;
+                    if (est == 1) {
+                        nuevoEstado = enums.EnumsEstado.PENDIENTE;
+                    }
+                    if (est == 2) {
+                        nuevoEstado = enums.EnumsEstado.PREPARACION;
+                    }
+                    if (est == 3) {
+                        nuevoEstado = enums.EnumsEstado.ENVIADO;
+                    }
+                    if (est == 4) {
+                        nuevoEstado = enums.EnumsEstado.ENTREGADO;
+                    }
+                    if (est == 5){
+                        nuevoEstado = enums.EnumsEstado.CANCELADO;
+                    }
+
+                    pedidoService.cambiarEstadoPedido(id, nuevoEstado);
+                    System.out.println("Estado actualizado.");
+
+                } else if (opcion == 3) {
+                    
+                    Long id = leerLong("Ingrese ID del pedido a eliminar: ");
+                    pedidoService.darDeBajaPedido(id);
+                    System.out.println("Pedido eliminado (Baja Lógica).");
+
+                } else if (opcion == 0) {
+                    // Volver
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+
     private static void menuCategorias() {
         int opcion = -1;
-
         while (opcion != 0) {
             System.out.println("\n--- GESTIÓN DE CATEGORÍAS ---");
             System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
@@ -73,24 +128,23 @@ public class Main {
                     String nom = leerString("Nombre de la categoría: ");
                     service.crearCategoria(nom);
                     System.out.println("¡Categoría creada con éxito!");
-                } else if (opcion == 3 || opcion == 4) {
+                } else if (opcion == 4) {
                     Long id = leerLong("Ingrese ID de categoría a eliminar: ");
                     service.eliminarCategoria(id);
                     System.out.println("¡Categoría eliminada!");
                 } else if (opcion == 0) {
-                    // volver
+                    // Volver
                 } else {
                     System.out.println("Opción incorrecta.");
                 }
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
 
     private static void menuUsuarios() {
         int opcion = -1;
-
         while (opcion != 0) {
             System.out.println("\n--- GESTIÓN DE USUARIOS ---");
             System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
@@ -110,13 +164,8 @@ public class Main {
                     Long id = leerLong("ID de usuario a eliminar: ");
                     service.eliminarUsuario(id);
                     System.out.println("¡Usuario eliminado (Soft Delete)!");
-                } else if (opcion == 0) {
-                    //volver
-                } else {
-                    System.out.println("Opción incorrecta.");
                 }
             } catch (ExceptionsMenu e) {
-
                 System.out.println(e.getMessage());
             }
         }
@@ -124,16 +173,17 @@ public class Main {
 
     private static void menuProductos() {
         System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
-        System.out.println("(Menú a completar por tus compañeros basándose en los anteriores)");
+        System.out.println("(A completar basándose en los anteriores)");
     }
 
+    // --- MÉTODOS DE ENTRADA DE DATOS ---
     private static int leerEntero(String mensaje) {
         while (true) {
             try {
                 System.out.print(mensaje);
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("Error: Por favor ingrese un número válido.");
+                System.out.println("Error: Por favor ingrese un número entero válido.");
             }
         }
     }
