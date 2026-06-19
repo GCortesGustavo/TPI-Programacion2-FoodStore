@@ -3,7 +3,6 @@
  */
 package com.foodstore;
 
-import services.TiendaService;
 import config.ConexionDB;
 import java.util.Scanner;
 import enums.EnumsRol;
@@ -18,10 +17,11 @@ public class Main {
 
     private static final services.PedidoService pedidoService = new services.PedidoService();
     private static final Scanner scanner = new Scanner(System.in);
-    private static final TiendaService service = new TiendaService();
+    private static final services.CategoriaService catService = new services.CategoriaService();
+    private static final services.ProductoService prodService = new services.ProductoService();
+    private static final services.UsuarioService userService = new services.UsuarioService();
 
     public static void main(String[] args) {
-        // 1. Intento de conexión inicial
         try {
             ConexionDB.getConnection();
             System.out.println("FoodStore iniciado correctamente.");
@@ -29,7 +29,6 @@ public class Main {
             System.out.println("Error de conexión: " + error.getMessage());
         }
 
-        // 2. Bucle principal del menú
         int opcion = -1;
 
         while (opcion != 0) {
@@ -90,18 +89,13 @@ public class Main {
                         nuevoEstado = enums.EnumsEstado.CANCELADO;
                     }
 
-
                     pedidoService.cambiarEstadoPedido(id, nuevoEstado);
                     System.out.println("Estado actualizado.");
 
                 } else if (opcion == 3) {
-                    
                     Long id = leerLong("Ingrese ID del pedido a eliminar: ");
                     pedidoService.darDeBajaPedido(id);
                     System.out.println("Pedido eliminado (Baja Lógica).");
-
-                } else if (opcion == 0) {
-                    // Volver
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -118,21 +112,18 @@ public class Main {
 
             try {
                 if (opcion == 1) {
-                    for (Categoria c : service.listarCategorias()) {
+                    for (Categoria c : catService.listarCategorias()) {
                         System.out.println(c.toString());
                     }
                 } else if (opcion == 2) {
                     String nom = leerString("Nombre de la categoría: ");
-                    service.crearCategoria(nom);
+                    String desc = leerString("Descripción de la categoría: ");
+                    catService.crearCategoria(nom, desc);
                     System.out.println("¡Categoría creada con éxito!");
                 } else if (opcion == 4) {
                     Long id = leerLong("Ingrese ID de categoría a eliminar: ");
-                    service.eliminarCategoria(id);
+                    catService.eliminarCategoria(id);
                     System.out.println("¡Categoría eliminada!");
-                } else if (opcion == 0) {
-                    // Volver
-                } else {
-                    System.out.println("Opción incorrecta.");
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -149,28 +140,28 @@ public class Main {
 
             try {
                 if (opcion == 1) {
-                    for (Usuario u : service.listarUsuarios()) {
+                    for (Usuario u : userService.listarUsuarios()) {
                         System.out.println(u.toString());
                     }
                 } else if (opcion == 2) {
                     String nom = leerString("Nombre: ");
                     String email = leerString("Email: ");
-                    service.crearUsuario(nom, email, EnumsRol.CLIENTE);
+                    userService.crearUsuario(nom, email, enums.EnumsRol.CLIENTE);
                     System.out.println("¡Usuario creado con éxito!");
                 } else if (opcion == 4) {
                     Long id = leerLong("ID de usuario a eliminar: ");
-                    service.eliminarUsuario(id);
+                    userService.eliminarUsuario(id);
                     System.out.println("¡Usuario eliminado (Soft Delete)!");
                 }
-            } catch (ExceptionsMenu e) {
-                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
 
     private static void menuProductos() {
         System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
-        System.out.println("(A completar basándose en los anteriores)");
+        System.out.println("(Menú a completar siguiendo el patrón de los anteriores)");
     }
 
     // --- MÉTODOS DE ENTRADA DE DATOS ---
