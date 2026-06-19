@@ -4,6 +4,7 @@
  */
 package dao;
 
+import entities.Calculable;
 import config.ConexionDB;
 import entities.Pedido;
 import entities.Usuario;

@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  *
- * @author Villalba - Cortés - Lorenzo Flores
+ * @author Villalba - Cortés - Lorenzo - Flores
  */
 public class Pedido extends Base implements Calculable {
 
