@@ -8,30 +8,23 @@ package entities;
  *
  * @author Villalba - Cortés - Lorenzo Flores
  */
+import java.util.Objects;
+
 public class Producto extends Base {
 
     private String nombre;
     private Double precio;
-    private String descripcion;
     private Integer stock;
-    private String imagen;
-    private boolean disponible;
     private Categoria categoria;
 
     public Producto() {
     }
 
-    public Producto(Long id, String nombre, Double precio, String descripcion,
-                    Integer stock, String imagen, boolean disponible,
-                    Categoria categoria) {
-
-        super();
+    public Producto(Long id, String nombre, Double precio, Integer stock, Categoria categoria) {
+        setId(id);
         this.nombre = nombre;
         this.precio = precio;
-        this.descripcion = descripcion;
         this.stock = stock;
-        this.imagen = imagen;
-        this.disponible = disponible;
         this.categoria = categoria;
     }
 
@@ -48,18 +41,7 @@ public class Producto extends Base {
     }
 
     public void setPrecio(Double precio) {
-        if (precio < 0) {
-            throw new IllegalArgumentException("El precio no puede ser negativo");
-        }
         this.precio = precio;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
     }
 
     public Integer getStock() {
@@ -67,26 +49,7 @@ public class Producto extends Base {
     }
 
     public void setStock(Integer stock) {
-        if (stock < 0) {
-            throw new IllegalArgumentException("El stock no puede ser negativo");
-        }
         this.stock = stock;
-    }
-
-    public String getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public boolean isDisponible() {
-        return disponible;
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
     }
 
     public Categoria getCategoria() {
@@ -99,6 +62,26 @@ public class Producto extends Base {
 
     @Override
     public String toString() {
-        return "Producto{" +"id=" + getId() +", nombre='" + nombre + '\'' +", precio=" + precio +", stock=" + stock +", disponible=" + disponible +", categoria=" + categoria.getNombre() +'}';
+        return "Producto{" +
+                "id=" + getId() +
+                ", nombre='" + nombre + '\'' +
+                ", precio=" + precio +
+                ", stock=" + stock +
+                ", categoria=" +
+                (categoria != null ? categoria.getNombre() : "Sin categoría") +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Producto)) return false;
+        Producto producto = (Producto) o;
+        return Objects.equals(getId(), producto.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

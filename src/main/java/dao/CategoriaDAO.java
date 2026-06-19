@@ -4,73 +4,149 @@
  */
 package dao;
 
-import config.ConexionDB;
 import entities.Categoria;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Villalba - Cortés - Lorenzo Flores
- */
-public class CategoriaDAO implements DAO<Categoria> {
+public class CategoriaDAO {
 
-@Override
-    public void guardar(Categoria cat) throws SQLException {
-        String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)";
-        try (Connection con = ConexionDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
-            ps.setString(1, cat.getNombre());
-            ps.setString(2, cat.getDescripcion());
-            ps.executeUpdate();
+    private Connection conexion;
 
-            // Esto recupera el ID que generó la base de datos automáticamente
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                cat.setId(rs.getLong(1));
-            }
+    public CategoriaDAO(Connection conexion) {
+        this.conexion = conexion;
+    }
+
+    // LISTAR
+    public List<Categoria> listar() throws SQLException {
+
+        List<Categoria> categorias = new ArrayList<>();
+
+        String sql = "SELECT * FROM categoria WHERE eliminado = false";
+
+        PreparedStatement ps = conexion.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+
+            Categoria categoria = new Categoria();
+
+            categoria.setId(rs.getLong("id"));
+            categoria.setNombre(rs.getString("nombre"));
+            categoria.setDescripcion(rs.getString("descripcion"));
+
+            categorias.add(categoria);
         }
+
+        return categorias;
     }
 
-    @Override
-    public List<Categoria> listarTodos() throws SQLException {
-        List<Categoria> lista = new ArrayList<>();
-        String sql = "SELECT * FROM categorias WHERE eliminado = false";
-        
-        try (Connection con = ConexionDB.getConnection();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            
-            while (rs.next()) {
-                Categoria c = new Categoria(rs.getString("nombre"), rs.getString("descripcion"));
-                c.setId(rs.getLong("id"));
-                c.setEliminado(rs.getBoolean("eliminado"));
-                lista.add(c);
-            }
+    // INSERTAR
+    public boolean insertar(Categoria categoria) throws SQLException {
+
+        if (categoria.getNombre() == null ||
+            categoria.getNombre().trim().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                "El nombre de la categoría no puede estar vacío");
         }
-        return lista;
-    }
 
-    @Override
-    public void eliminar(Long id) throws SQLException {
-        // BAJA LÓGICA (Soft Delete) como pide la rúbrica
-        String sql = "UPDATE categorias SET eliminado = true WHERE id = ?";
-        try (Connection con = ConexionDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            ps.executeUpdate();
+        String validar =
+                "SELECT COUNT(*) FROM categoria " +
+                "WHERE nombre = ? AND eliminado = false";
+
+        PreparedStatement psValidar =
+                conexion.prepareStatement(validar);
+
+        psValidar.setString(1, categoria.getNombre());
+
+        ResultSet rs = psValidar.executeQuery();
+
+        if (rs.next() && rs.getInt(1) > 0) {
+
+            throw new IllegalArgumentException(
+                "Ya existe una categoría con ese nombre");
         }
-    }
-    
-    @Override
-    public void modificar(Categoria t) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        String sql =
+                "INSERT INTO categoria " +
+                "(nombre, descripcion, eliminado) " +
+                "VALUES (?, ?, false)";
+
+        PreparedStatement ps =
+                conexion.prepareStatement(sql);
+
+        ps.setString(1, categoria.getNombre());
+        ps.setString(2, categoria.getDescripcion());
+
+        return ps.executeUpdate() > 0;
     }
 
-    @Override
-    public Categoria buscarPorId(Long id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    // EDITAR
+     public boolean editar(Categoria categoria) throws SQLException {
+
+        String validar =
+                "SELECT id FROM categoria " +
+                "WHERE id = ? AND eliminado = false";
+
+        PreparedStatement psValidar =
+                conexion.prepareStatement(validar);
+
+        psValidar.setLong(1, categoria.getId());
+
+        ResultSet rs = psValidar.executeQuery();
+
+        if (!rs.next()) {
+
+            throw new IllegalArgumentException(
+                "No existe una categoría con ese ID");
+        }
+
+        String sql =
+                "UPDATE categoria " +
+                "SET nombre = ?, descripcion = ? " +
+                "WHERE id = ?";
+
+        PreparedStatement ps =
+                conexion.prepareStatement(sql);
+
+        ps.setString(1, categoria.getNombre());
+        ps.setString(2, categoria.getDescripcion());
+        ps.setLong(3, categoria.getId());
+
+        return ps.executeUpdate() > 0;
+    }
+
+    // ELIMINAR (BAJA LÓGICA)
+    public boolean eliminar(Long id) throws SQLException {
+
+        String validar =
+                "SELECT id FROM categoria " +
+                "WHERE id = ? AND eliminado = false";
+
+        PreparedStatement psValidar =
+                conexion.prepareStatement(validar);
+
+        psValidar.setLong(1, id);
+
+        ResultSet rs = psValidar.executeQuery();
+
+        if (!rs.next()) {
+
+            throw new IllegalArgumentException(
+                "No existe una categoría con ese ID");
+        }
+
+        String sql =
+                "UPDATE categoria " +
+                "SET eliminado = true " +
+                "WHERE id = ?";
+
+        PreparedStatement ps =
+                conexion.prepareStatement(sql);
+
+        ps.setLong(1, id);
+
+        return ps.executeUpdate() > 0;
     }
 }
