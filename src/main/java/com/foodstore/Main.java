@@ -181,7 +181,7 @@ public class Main {
                     Long idCategoria = leerLong("ID de la Categoría: ");
 
                     //prodService.crearProducto(nom, desc, precio, idCategoria);  CHEEE ACA FALTAN LOS METODOS DE LA CLASE PRODUCTO
-                    //System.out.println("¡Producto creado con éxito!");
+                    System.out.println("¡Producto creado con éxito!");
                     
                 } else if (opcion == 3) {
                     System.out.println("\n--- EDITAR PRODUCTO ---");
@@ -191,8 +191,8 @@ public class Main {
                     Double precio = leerDouble("Nuevo precio: ");
                     Long idCategoria = leerLong("Nuevo ID de Categoría: ");
                     
-                    //prodService.editarProducto(id, nom, desc, precio, idCategoria); ACA TAMBIEN FALTAN LOS METODOS DE LA CLASE PRODUCTO
-                    //System.out.println("¡Producto editado con éxito!");
+                    //prodService.editarProducto(id, nom, desc, precio, idCategoria);  TAMBIEN FALTAN LOS METODOS DE LA CLASE PRODUCTO
+                    System.out.println("¡Producto editado con éxito!");
                     
                 } else if (opcion == 4) {
                     System.out.println("\n--- ELIMINAR PRODUCTO ---");
