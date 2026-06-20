@@ -15,7 +15,7 @@ import java.util.List;
  * @author Usuario
  */
 public class UsuarioService {
-    
+
     private UsuarioDAO dao = new UsuarioDAO();
 
     public void crearUsuario(String nombre, String email, EnumsRol rol) throws Exception {
@@ -37,6 +37,10 @@ public class UsuarioService {
     public void eliminarUsuario(Long id) throws Exception {
         // TODO: Llamar al dao.eliminar(id)
     }
-    
+
+    public Usuario buscarUsuarioPorId(Long id) throws Exception {
+        return dao.buscarPorId(id);
+    }
+
     // TODO: Implementar lógica para el PerfilDetalle (Relación 1:1)
 }

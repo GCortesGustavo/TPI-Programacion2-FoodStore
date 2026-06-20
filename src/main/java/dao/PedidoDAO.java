@@ -6,7 +6,9 @@ package dao;
 
 import entities.Calculable;
 import config.ConexionDB;
+import entities.DetallePedido;
 import entities.Pedido;
+import entities.Producto;
 import entities.Usuario;
 import java.sql.Connection;
 import java.sql.Date;
@@ -52,14 +54,14 @@ public class PedidoDAO {
         try (Connection con = ConexionDB.getConnection(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                // Creamos un usuario temporal para el pedido
                 Usuario u = new Usuario(rs.getString("nombre_usuario"), "", enums.EnumsRol.CLIENTE);
                 u.setId(rs.getLong("usuario_id"));
 
                 Pedido p = new Pedido(u, enums.EnumsFormaDePago.valueOf(rs.getString("forma_pago")));
                 p.setId(rs.getLong("id"));
                 p.setEstado(enums.EnumsEstado.valueOf(rs.getString("estado")));
-                p.setEliminado(rs.getBoolean("eliminado"));
+
+                cargarDetallesAlPedido(p, con);
 
                 lista.add(p);
             }
@@ -81,6 +83,36 @@ public class PedidoDAO {
         try (Connection con = ConexionDB.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setLong(1, id);
             ps.executeUpdate();
+        }
+    }
+
+    private void cargarDetallesAlPedido(Pedido p, Connection con) throws SQLException {
+        String sql = "SELECT dp.*, prod.nombre as prod_nombre, prod.precio as prod_precio "
+                + "FROM detalles_pedidos dp "
+                + "JOIN productos prod ON dp.producto_id = prod.id "
+                + "WHERE dp.pedido_id = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, p.getId());
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                // 1. Creamos el producto y le cargamos TODO lo necesario para el cálculo
+                Producto prod = new Producto();
+                prod.setId(rs.getLong("producto_id"));
+                prod.setNombre(rs.getString("prod_nombre"));
+
+                prod.setPrecio(rs.getDouble("prod_precio"));
+
+                // 2. Creamos el detalle pasándole el producto ya con su precio cargado
+                DetallePedido dp = new DetallePedido(prod, rs.getInt("cantidad"));
+
+                // Seteamos el ID del detalle
+                dp.setId(rs.getLong("id"));
+
+                // 3. Lo agregamos al pedido
+                p.addDetallePedido(dp);
+            }
         }
     }
 }

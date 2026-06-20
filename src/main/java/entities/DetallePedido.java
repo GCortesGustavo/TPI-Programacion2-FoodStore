@@ -17,11 +17,10 @@ public class DetallePedido extends Base {
         super();
         this.producto = producto;
         this.cantidad = cantidad;
-        this.precioUnitario = producto.getPrecio();
+        this.precioUnitario = producto.getPrecio(); 
     }
-    
-    //=================== GETTERS Y SETTERS=======================
 
+    //=================== GETTERS Y SETTERS=======================
     public Producto getProducto() {
         return producto;
     }
@@ -45,14 +44,12 @@ public class DetallePedido extends Base {
     public void setPrecioUnitario(double precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
-    
 
     public double getSubtotal() {
         return cantidad * precioUnitario;
     }
-    
+
     //===================TERMIANAN LOS GETTERS Y SETTERS=======================
-    
     @Override
     public String toString() {
         return cantidad + "x " + producto.getNombre() + " ($" + precioUnitario + ") = $" + getSubtotal();

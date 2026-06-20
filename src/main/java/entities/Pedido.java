@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  *
@@ -40,7 +41,11 @@ public class Pedido extends Base implements Calculable {
         this.total = calcularTotal();
     }
 
-    
+    public void addDetallePedido(DetallePedido detalle) {
+        this.detalles.add(detalle);
+        this.total = calcularTotal();
+    }
+
     public DetallePedido findDetallePedidoByProducto(Producto producto) {
         for (DetallePedido dp : detalles) {
             if (dp.getProducto().getId().equals(producto.getId())) {
@@ -106,7 +111,26 @@ public class Pedido extends Base implements Calculable {
     //===================TERMINAN LOS GETTERS Y SETTERS=======================
     @Override
     public String toString() {
-        return "Pedido #" + id + " | Usuario: " + usuario.getNombre() + " | Estado: " + estado + " | Total: $" + getTotal();
+        StringJoiner sb = new StringJoiner("\n")
+                .add("==========================================")
+                .add("PEDIDO #" + id + " | Fecha: " + fecha)
+                .add("Cliente: " + usuario.getNombre())
+                .add("Estado: " + estado + " | Pago: " + formaPago)
+                .add("------------------ DETALLES ------------------");
+
+        if (detalles.isEmpty()) {
+            sb.add("   (No hay productos cargados)");
+        } else {
+            for (DetallePedido dp : detalles) {
+                sb.add(" - " + dp.toString());
+            }
+        }
+
+        sb.add("------------------------------------------")
+                .add("TOTAL A PAGAR: $" + getTotal())
+                .add("==========================================");
+
+        return sb.toString();
     }
 
     @Override

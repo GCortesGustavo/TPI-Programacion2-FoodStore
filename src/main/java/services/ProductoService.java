@@ -42,4 +42,8 @@ public class ProductoService {
     public void modificarProducto(Producto p) throws Exception {
         // TODO: Llamar al dao.modificar(p)
     }
+
+    public Producto buscarProductoPorId(Long id) throws Exception {
+        return dao.buscarPorId(id);
+    }
 }
