@@ -160,8 +160,63 @@ public class Main {
     }
 
     private static void menuProductos() {
-        System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
-        System.out.println("(Menú a completar siguiendo el patrón de los anteriores)");
+        int opcion = -1;
+        while (opcion != 0) {
+            System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
+            System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
+            opcion = leerEntero("Seleccione: ");
+
+            try {
+                if (opcion == 1) {
+                    System.out.println("\n--- LISTADO DE PRODUCTOS ---");
+  
+                    for (Producto p : prodService.listarProductos()) {
+                        System.out.println(p.toString());
+                    }
+                } else if (opcion == 2) {
+                    System.out.println("\n--- NUEVO PRODUCTO ---");
+                    String nom = leerString("Nombre del producto: ");
+                    String desc = leerString("Descripción: ");
+                    Double precio = leerDouble("Precio: ");
+                    Long idCategoria = leerLong("ID de la Categoría: ");
+
+                    //prodService.crearProducto(nom, desc, precio, idCategoria);  CHEEE ACA FALTAN LOS METODOS DE LA CLASE PRODUCTO
+                    //System.out.println("¡Producto creado con éxito!");
+                    
+                } else if (opcion == 3) {
+                    System.out.println("\n--- EDITAR PRODUCTO ---");
+                    Long id = leerLong("Ingrese ID del producto a editar: ");
+                    String nom = leerString("Nuevo nombre: ");
+                    String desc = leerString("Nueva descripción: ");
+                    Double precio = leerDouble("Nuevo precio: ");
+                    Long idCategoria = leerLong("Nuevo ID de Categoría: ");
+                    
+                    //prodService.editarProducto(id, nom, desc, precio, idCategoria); ACA TAMBIEN FALTAN LOS METODOS DE LA CLASE PRODUCTO
+                    //System.out.println("¡Producto editado con éxito!");
+                    
+                } else if (opcion == 4) {
+                    System.out.println("\n--- ELIMINAR PRODUCTO ---");
+                    Long id = leerLong("Ingrese ID de producto a eliminar: ");
+                    
+                    prodService.eliminarProducto(id);
+                    System.out.println("¡Producto eliminado!");
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+
+
+    private static Double leerDouble(String mensaje) {
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                return Double.parseDouble(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Por favor ingrese un número decimal válido (ej: 1500.50).");
+            }
+        }
     }
 
     // --- MÉTODOS DE ENTRADA DE DATOS ---
