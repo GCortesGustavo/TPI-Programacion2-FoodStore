@@ -111,24 +111,31 @@ public class Pedido extends Base implements Calculable {
     //===================TERMINAN LOS GETTERS Y SETTERS=======================
     @Override
     public String toString() {
-        StringJoiner sb = new StringJoiner("\n")
-                .add("==========================================")
-                .add("PEDIDO #" + id + " | Fecha: " + fecha)
-                .add("Cliente: " + usuario.getNombre())
-                .add("Estado: " + estado + " | Pago: " + formaPago)
-                .add("------------------ DETALLES ------------------");
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\n╔══════════════════════════════════════════════════════════╗");
+        sb.append(String.format("\n║ PEDIDO #%-5d                                         ║", id));
+        sb.append(String.format("\n║ Fecha: %-10s | Cliente: %-25s ║", fecha, usuario.getNombre()));
+        sb.append(String.format("\n║ Estado: %-10s | Pago: %-28s ║", estado, formaPago));
+        sb.append("\n╠══════════════════════════════════════════════════════════╣");
+        sb.append("\n║ CANT. | PRODUCTO                | PRECIO U. | SUBTOTAL   ║");
+        sb.append("\n╟───────┼─────────────────────────┼───────────┼────────────╢");
 
         if (detalles.isEmpty()) {
-            sb.add("   (No hay productos cargados)");
+            sb.append("\n║          (No hay productos cargados en este pedido)      ║");
         } else {
             for (DetallePedido dp : detalles) {
-                sb.add(" - " + dp.toString());
+                sb.append(String.format("\n║ %-5d | %-23.23s | %9.2f | %10.2f ║",
+                        dp.getCantidad(),
+                        dp.getProducto().getNombre(),
+                        dp.getPrecioUnitario(),
+                        dp.getSubtotal()));
             }
         }
 
-        sb.add("------------------------------------------")
-                .add("TOTAL A PAGAR: $" + getTotal())
-                .add("==========================================");
+        sb.append("\n╠═══════╧═════════════════════════╧═══════════╧════════════╣");
+        sb.append(String.format("\n║ TOTAL A PAGAR:                             $ %11.2f ║", getTotal()));
+        sb.append("\n╚══════════════════════════════════════════════════════════╝\n");
 
         return sb.toString();
     }

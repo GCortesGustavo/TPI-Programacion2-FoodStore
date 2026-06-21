@@ -18,29 +18,24 @@ public class ProductoService {
 
     private ProductoDAO dao = new ProductoDAO();
 
-    public void crearProducto(String nombre, double precio, int stock, Categoria cat) throws Exception {
-        // TODO: 1. Validar que el nombre no sea vacío
-        // TODO: 2. Validar que precio y stock sean >= 0
-        // TODO: 3. Crear el objeto Producto y llamar al dao.guardar()
-        System.out.println("Lógica de creación de producto pendiente...");
+    public void crearProducto(String nombre, double precio, int stock, Categoria cat, String desc) throws Exception {
+        if (nombre.isBlank()) {
+            throw new Exception("Nombre obligatorio.");
+        }
+        if (precio < 0 || stock < 0) {
+            throw new Exception("Valores no pueden ser negativos.");
+        }
+
+        Producto nuevo = new Producto(nombre, precio, desc, stock, cat);
+        dao.guardar(nuevo);
     }
 
-    public List<Producto> listarProductos() {
-        try {
-            // TODO: Llamar al dao.listarTodos()
-            return new ArrayList<>();
-        } catch (Exception e) {
-            System.out.println("Error al listar productos: " + e.getMessage());
-            return new ArrayList<>();
-        }
+    public List<Producto> listarProductos() throws Exception {
+        return dao.listarTodos();
     }
 
     public void eliminarProducto(Long id) throws Exception {
-        // TODO: Llamar al dao.eliminar(id)
-    }
-
-    public void modificarProducto(Producto p) throws Exception {
-        // TODO: Llamar al dao.modificar(p)
+        dao.eliminar(id);
     }
 
     public Producto buscarProductoPorId(Long id) throws Exception {

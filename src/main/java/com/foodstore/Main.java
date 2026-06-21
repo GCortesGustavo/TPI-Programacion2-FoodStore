@@ -14,6 +14,7 @@ import entities.*;
  * @author Villalba, Cortés, Lorenzo , Flores
  */
 public class Main {
+
     private static final services.PedidoService pedidoService = new services.PedidoService();
     private static final Scanner scanner = new Scanner(System.in);
     private static final services.CategoriaService catService = new services.CategoriaService();
@@ -107,10 +108,16 @@ public class Main {
                     String desc = leerString("Descripción de la categoría: ");
                     catService.crearCategoria(nom, desc);
                     System.out.println("¡Categoría creada con éxito!");
+                } else if (opcion == 3) {
+                    Long id = leerLong("ID de la categoría a editar: ");
+                    String nuevoNom = leerString("Nuevo nombre: ");
+                    String nuevaDesc = leerString("Nueva descripción: ");
+                    catService.modificarCategoria(id, nuevoNom, nuevaDesc);
+                    System.out.println("Categoría actualizada.");
                 } else if (opcion == 4) {
                     Long id = leerLong("Ingrese ID de categoría a eliminar: ");
                     catService.eliminarCategoria(id);
-                    System.out.println("¡Categoría eliminada!");
+                    System.out.println("Categoría eliminada!");
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
@@ -174,43 +181,32 @@ public class Main {
         int opcion = -1;
         while (opcion != 0) {
             System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
-            System.out.println("1. Listar | 2. Crear | 3. Editar | 4. Eliminar | 0. Volver");
+            System.out.println("1. Listar | 2. Crear | 3. Eliminar | 0. Volver");
             opcion = leerEntero("Seleccione: ");
 
             try {
                 if (opcion == 1) {
-                    System.out.println("\n--- LISTADO DE PRODUCTOS ---");
-
                     for (Producto p : prodService.listarProductos()) {
                         System.out.println(p.toString());
                     }
                 } else if (opcion == 2) {
-                    System.out.println("\n--- NUEVO PRODUCTO ---");
-                    String nom = leerString("Nombre del producto: ");
+                    String nom = leerString("Nombre: ");
+                    double precio = (double) leerLong("Precio: ");
+                    int stock = leerEntero("Stock: ");
                     String desc = leerString("Descripción: ");
-                    Double precio = leerDouble("Precio: ");
-                    Long idCategoria = leerLong("ID de la Categoría: ");
+                    Long idCat = leerLong("ID de Categoría: ");
 
-                    //prodService.crearProducto(nom, desc, precio, idCategoria);  CHEEE ACA FALTAN LOS METODOS DE LA CLASE PRODUCTO
-                    System.out.println("¡Producto creado con éxito!");
-
+                    Categoria cat = catService.buscarCategoriaPorId(idCat);
+                    if (cat != null) {
+                        prodService.crearProducto(nom, precio, stock, cat, desc);
+                        System.out.println("Producto creado.");
+                    } else {
+                        System.out.println("Categoría no encontrada.");
+                    }
                 } else if (opcion == 3) {
-                    System.out.println("\n--- EDITAR PRODUCTO ---");
-                    Long id = leerLong("Ingrese ID del producto a editar: ");
-                    String nom = leerString("Nuevo nombre: ");
-                    String desc = leerString("Nueva descripción: ");
-                    Double precio = leerDouble("Nuevo precio: ");
-                    Long idCategoria = leerLong("Nuevo ID de Categoría: ");
-
-                    //prodService.editarProducto(id, nom, desc, precio, idCategoria);  TAMBIEN FALTAN LOS METODOS DE LA CLASE PRODUCTO
-                    System.out.println("¡Producto editado con éxito!");
-
-                } else if (opcion == 4) {
-                    System.out.println("\n--- ELIMINAR PRODUCTO ---");
-                    Long id = leerLong("Ingrese ID de producto a eliminar: ");
-
+                    Long id = leerLong("ID a eliminar: ");
                     prodService.eliminarProducto(id);
-                    System.out.println("¡Producto eliminado!");
+                    System.out.println("Producto eliminado.");
                 }
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());

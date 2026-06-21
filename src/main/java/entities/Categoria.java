@@ -28,6 +28,13 @@ public class Categoria extends Base {
         this.descripcion = descripcion;
         this.productos = new ArrayList<>();
     }
+    
+    public Categoria(String nombre, String descripcion) {
+        super(); 
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.productos = new ArrayList<>();
+    }
  
     public String getNombre() {
         return nombre;

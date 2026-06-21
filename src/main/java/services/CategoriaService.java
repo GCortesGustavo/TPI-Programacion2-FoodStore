@@ -35,4 +35,12 @@ public class CategoriaService {
         Categoria cat = new Categoria(id, nombre, descripcion);
         dao.modificar(cat);
     }
+
+    public Categoria buscarCategoriaPorId(Long id) throws Exception {
+        Categoria cat = dao.buscarPorId(id);
+        if (cat == null) {
+            throw new Exception("No existe ninguna categoría con el ID: " + id);
+        }
+        return cat;
+    }
 }
