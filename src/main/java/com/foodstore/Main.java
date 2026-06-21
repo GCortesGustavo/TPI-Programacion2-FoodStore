@@ -133,9 +133,33 @@ public class Main {
                     }
                 } else if (opcion == 2) {
                     String nom = leerString("Nombre: ");
+                    String apellido = leerString("Apellido: ");
                     String email = leerString("Email: ");
-                    userService.crearUsuario(nom, email, enums.EnumsRol.CLIENTE);
+                    String celular = leerString("Celular: ");
+                    String contasena = leerString("Contraseña: ");
+                    userService.crearUsuario(nom, apellido, email, celular, contasena, enums.EnumsRol.CLIENTE);
                     System.out.println("¡Usuario creado con éxito!");
+                } else if (opcion == 3) {
+                    Long id = leerLong("ID del usuario a editar: ");
+                    Usuario uExistente = userService.buscarUsuarioPorId(id);
+
+                    if (uExistente != null) {
+                        System.out.println("Modificando a: " + uExistente.getNombre());
+                        String nom = leerString("Nuevo Nombre: ");
+                        String ape = leerString("Nuevo Apellido: ");
+                        String mail = leerString("Nuevo Email: ");
+                        String cel = leerString("Nuevo Celular: ");
+                        String pass = leerString("Nueva Contraseña: ");
+
+                        uExistente.setNombre(nom);
+                        uExistente.setApellido(ape);
+                        uExistente.setEmail(mail);
+                        uExistente.setCelular(cel);
+                        uExistente.setContrasenia(pass);
+
+                        userService.actualizarUsuario(uExistente);
+                        System.out.println("Usuario actualizado con éxito.");
+                    }
                 } else if (opcion == 4) {
                     Long id = leerLong("ID de usuario a eliminar: ");
                     userService.eliminarUsuario(id);
@@ -265,7 +289,7 @@ public class Main {
         while (agregando) {
             System.out.println("\n--- AGREGAR PRODUCTO AL PEDIDO ---");
             Long idProd = leerLong("Ingrese ID del Producto: ");
-            Producto prod = prodService.buscarProductoPorId(idProd); 
+            Producto prod = prodService.buscarProductoPorId(idProd);
 
             if (prod != null) {
                 int cant = leerEntero("Cantidad: ");

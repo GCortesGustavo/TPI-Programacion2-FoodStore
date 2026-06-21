@@ -4,6 +4,7 @@
  */
 package services;
 
+import com.foodstore.Main;
 import dao.UsuarioDAO;
 import entities.Usuario;
 import enums.EnumsRol;
@@ -18,28 +19,45 @@ public class UsuarioService {
 
     private UsuarioDAO dao = new UsuarioDAO();
 
-    public void crearUsuario(String nombre, String email, EnumsRol rol) throws Exception {
-        // TODO: 1. Validar que el email sea único en la base de datos
-        // TODO: 2. Crear objeto Usuario y llamar al dao.guardar()
-        System.out.println("Lógica de creación de usuario pendiente...");
+    public void crearUsuario(String nombre, String apellido, String email, String celular, String contrasena, EnumsRol rol) throws Exception {
+        if (email == null || email.isBlank()) {
+            throw new Exception("El email no puede estar vacío.");
+        }
+
+        if (!email.contains("@")) {
+            throw new Exception("Formato de email no válido.");
+        }
+
+        if (dao.emailExistente(email)) {
+            throw new Exception("El email '" + email + "' ya está registrado.");
+        }
+
+        Usuario nuevo = new Usuario(nombre, apellido, email, celular, contrasena, rol);
+        dao.guardar(nuevo);
     }
 
-    public List<Usuario> listarUsuarios() {
-        try {
-            // TODO: Llamar al dao.listarTodos()
-            return new ArrayList<>();
-        } catch (Exception e) {
-            System.out.println("Error al listar usuarios: " + e.getMessage());
-            return new ArrayList<>();
-        }
+    public List<Usuario> listarUsuarios() throws Exception {
+        return dao.listarTodos();
     }
 
     public void eliminarUsuario(Long id) throws Exception {
-        // TODO: Llamar al dao.eliminar(id)
+        if (dao.buscarPorId(id) == null) {
+            throw new Exception("No existe ningún usuario con ese ID.");
+        }
+        dao.eliminar(id);
     }
 
     public Usuario buscarUsuarioPorId(Long id) throws Exception {
-        return dao.buscarPorId(id);
+        Usuario u = dao.buscarPorId(id);
+        if (u == null) {
+            throw new Exception("Usuario no encontrado.");
+        }
+        return u;
+    }
+
+    public void actualizarUsuario(Usuario u) throws Exception {
+        // Aquí podrías validar que el nuevo email no esté duplicado si cambió
+        dao.modificar(u);
     }
 
     // TODO: Implementar lógica para el PerfilDetalle (Relación 1:1)
