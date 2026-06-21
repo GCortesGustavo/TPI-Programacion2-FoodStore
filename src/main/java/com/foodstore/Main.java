@@ -14,7 +14,6 @@ import entities.*;
  * @author Villalba, Cortés, Lorenzo , Flores
  */
 public class Main {
-
     private static final services.PedidoService pedidoService = new services.PedidoService();
     private static final Scanner scanner = new Scanner(System.in);
     private static final services.CategoriaService catService = new services.CategoriaService();
