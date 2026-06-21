@@ -47,14 +47,29 @@ public class PedidoDAO {
 
     public List<Pedido> listarTodos() throws Exception {
         List<Pedido> lista = new ArrayList<>();
-        String sql = "SELECT p.*, u.nombre as nombre_usuario FROM pedidos p "
+
+        String sql = "SELECT p.*, "
+                + "u.nombre as nombre_usuario, "
+                + "u.apellido as apellido_usuario, "
+                + "u.mail as email_usuario, "
+                + "u.celular as celular_usuario, "
+                + "u.contrasenia as contrasenia_usuario, "
+                + "u.rol as rol_usuario "
+                + "FROM pedidos p "
                 + "JOIN usuarios u ON p.usuario_id = u.id "
                 + "WHERE p.eliminado = false";
 
         try (Connection con = ConexionDB.getConnection(); Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                Usuario u = new Usuario(rs.getString("nombre_usuario"), "", enums.EnumsRol.CLIENTE);
+                Usuario u = new Usuario(
+                        rs.getString("nombre_usuario"),
+                        rs.getString("apellido_usuario"),
+                        rs.getString("email_usuario"),
+                        rs.getString("celular_usuario"),
+                        rs.getString("contrasenia_usuario"),
+                        enums.EnumsRol.valueOf(rs.getString("rol_usuario"))
+                );
                 u.setId(rs.getLong("usuario_id"));
 
                 Pedido p = new Pedido(u, enums.EnumsFormaDePago.valueOf(rs.getString("forma_pago")));
