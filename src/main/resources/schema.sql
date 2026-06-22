@@ -49,8 +49,7 @@ CREATE TABLE usuarios (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. RELACIÓN 1 A 1 (Exigida por Rúbrica para no tener 0)
--- Vamos a crear un Perfil Detalle para cada Usuario.
+-- 5. RELACIÓN 1 A 1 
 CREATE TABLE perfiles_detalles (
     usuario_id BIGINT PRIMARY KEY,
     direccion VARCHAR(255),
@@ -63,7 +62,7 @@ CREATE TABLE perfiles_detalles (
 CREATE TABLE pedidos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
-    estado VARCHAR(20), -- PENDIENTE, CONFIRMADO, TERMINADO, CANCELADO
+    estado VARCHAR(20), 
     total DOUBLE DEFAULT 0,
     forma_pago VARCHAR(20), -- TARJETA, TRANSFERENCIA, EFECTIVO
     usuario_id BIGINT,
