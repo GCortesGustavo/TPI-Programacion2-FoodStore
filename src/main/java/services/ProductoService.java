@@ -46,4 +46,11 @@ public class ProductoService {
     public Producto buscarProductoPorId(Long id) throws Exception {
         return dao.buscarPorId(id);
     }
+
+    public void modificarProducto(Producto p) throws Exception {
+        if (p.getPrecio() < 0 || p.getStock() < 0) {
+            throw new Exception("Error: Precio o Stock no pueden ser negativos.");
+        }
+        dao.modificar(p);
+    }
 }

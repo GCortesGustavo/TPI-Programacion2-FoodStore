@@ -112,9 +112,18 @@ public class ProductoDAO implements DAO<Producto> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return mapearProducto(rs); 
+                return mapearProducto(rs);
             }
         }
         return null;
+    }
+
+    public void actualizarStock(Long id, int nuevoStock, Connection con) throws SQLException {
+        String sql = "UPDATE productos SET stock = ? WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, nuevoStock);
+            ps.setLong(2, id);
+            ps.executeUpdate();
+        }
     }
 }

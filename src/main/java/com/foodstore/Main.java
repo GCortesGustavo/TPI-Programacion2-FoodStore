@@ -5,8 +5,6 @@ package com.foodstore;
 
 import config.ConexionDB;
 import java.util.Scanner;
-import enums.EnumsRol;
-import exception.ExceptionsMenu;
 import entities.*;
 
 /**
@@ -181,7 +179,7 @@ public class Main {
         int opcion = -1;
         while (opcion != 0) {
             System.out.println("\n--- GESTIÓN DE PRODUCTOS ---");
-            System.out.println("1. Listar | 2. Crear | 3. Eliminar | 0. Volver");
+            System.out.println("1. Listar | 2. Crear | 3.Editar | 4. Eliminar | 0. Volver");
             opcion = leerEntero("Seleccione: ");
 
             try {
@@ -204,6 +202,25 @@ public class Main {
                         System.out.println("Categoría no encontrada.");
                     }
                 } else if (opcion == 3) {
+                    Long id = leerLong("ID del producto a editar: ");
+                    Producto p = prodService.buscarProductoPorId(id);
+
+                    if (p != null) {
+                        System.out.println("Editando: " + p.getNombre());
+                        p.setNombre(leerString("Nuevo nombre: "));
+                        p.setPrecio((double) leerLong("Nuevo precio: "));
+                        p.setStock(leerEntero("Nuevo stock: "));
+                        p.setDescripcion(leerString("Nueva descripción: "));
+
+                        Long idCat = leerLong("Nuevo ID de Categoría: ");
+                        Categoria cat = catService.buscarCategoriaPorId(idCat);
+                        if (cat != null) {
+                            p.setCategoria(cat);
+                            prodService.modificarProducto(p);
+                            System.out.println("Producto actualizado correctamente.");
+                        }
+                    }
+                } else if (opcion == 4) {
                     Long id = leerLong("ID a eliminar: ");
                     prodService.eliminarProducto(id);
                     System.out.println("Producto eliminado.");
