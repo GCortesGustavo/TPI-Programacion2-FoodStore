@@ -32,6 +32,9 @@ public class PedidoService {
 
                 detalleDAO.guardar(detalle, pedidoId, con);
 
+                int nuevoStock = detalle.getProducto().getStock() - detalle.getCantidad();
+
+                new dao.ProductoDAO().actualizarStock(detalle.getProducto().getId(), nuevoStock, con);
             }
 
             con.commit();
@@ -50,7 +53,7 @@ public class PedidoService {
     }
 
     public List<Pedido> obtenerTodosLosPedidos() throws Exception {
-        return pedidoDAO.listarTodos(); 
+        return pedidoDAO.listarTodos();
     }
 
     public void cambiarEstadoPedido(Long id, enums.EnumsEstado nuevoEstado) throws Exception {
@@ -60,4 +63,5 @@ public class PedidoService {
     public void darDeBajaPedido(Long id) throws Exception {
         pedidoDAO.eliminar(id);
     }
+
 }

@@ -49,16 +49,7 @@ CREATE TABLE usuarios (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. RELACIÓN 1 A 1 
-CREATE TABLE perfiles_detalles (
-    usuario_id BIGINT PRIMARY KEY,
-    direccion VARCHAR(255),
-    ciudad VARCHAR(100),
-    codigo_postal VARCHAR(10),
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-);
-
--- 6. Tabla Pedidos (Épica 4)
+-- 6. Tabla Pedidos
 CREATE TABLE pedidos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     fecha DATE NOT NULL,
