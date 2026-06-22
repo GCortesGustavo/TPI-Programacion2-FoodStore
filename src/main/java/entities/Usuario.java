@@ -21,9 +21,9 @@ public class Usuario extends Base {
     private String contrasenia;
     private EnumsRol rol;
     private List<Pedido> pedidos = new ArrayList();
+    private PerfilDetalle perfil;
 
     //Constructor para cuando se crea un usuario nuevo
-
     public Usuario(String nombre, String apellido, String email, String celular, String contrasenia, EnumsRol rol) {
         super();
         this.nombre = nombre;
@@ -32,16 +32,15 @@ public class Usuario extends Base {
         this.celular = celular;
         this.contrasenia = contrasenia;
         this.rol = rol;
+        this.perfil = new PerfilDetalle("No asignada", "No asignada");
     }
-    
 
     //Constructor para cuando se trae un usuario de la BD
     public Usuario() {
-        super();   
+        super();
     }
 
     //=================== GETTERs Y SETTERS=======================
-
     public String getNombre() {
         return nombre;
     }
@@ -97,7 +96,14 @@ public class Usuario extends Base {
     public void setPedidos(List<Pedido> pedidos) {
         this.pedidos = pedidos;
     }
-   
+
+    public PerfilDetalle getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(PerfilDetalle perfil) {
+        this.perfil = perfil;
+    }
 
     //===================TERMINAN LOS GETTERS Y SETTERS=======================
     @Override
