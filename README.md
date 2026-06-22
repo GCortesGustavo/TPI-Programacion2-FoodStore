@@ -32,7 +32,7 @@ El proyecto utiliza un archivo de configuración centralizado:
 
 ## [(Enlace al video)](https://www.youtube.com/watch?v=G9Z5NRj2l14)
 
-## [(Enlace a la documentación)]([https://www.youtube.com/watch?v=G9Z5NRj2l14](https://docs.google.com/document/d/12On_cgqfJPYwKFreFvClH86ogsbe8VQt7DAOMIju1wI/edit?usp=sharing))
+## [(Enlace a la documentación)](https://docs.google.com/document/d/12On_cgqfJPYwKFreFvClH86ogsbe8VQt7DAOMIju1wI/edit?usp=sharing)
 
 ## 👥 Integrantes
 * **Gustavo Cortés** 
