@@ -100,4 +100,21 @@ public class ProductoDAO implements DAO<Producto> {
             return rs.next() ? mapearProducto(rs) : null;
         }
     }
+
+    public Producto buscarPorNombre(String nombre) throws Exception {
+        String sql = "SELECT p.*, c.nombre AS categoria_nombre "
+                + "FROM productos p INNER JOIN categorias c ON p.categoria_id = c.id "
+                + "WHERE p.nombre = ? AND p.eliminado = false";
+
+        try (Connection con = config.ConexionDB.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, nombre);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return mapearProducto(rs); 
+            }
+        }
+        return null;
+    }
 }

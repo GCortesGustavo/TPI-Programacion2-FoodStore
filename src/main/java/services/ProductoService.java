@@ -26,6 +26,11 @@ public class ProductoService {
             throw new Exception("Valores no pueden ser negativos.");
         }
 
+        Producto existente = dao.buscarPorNombre(nombre);
+        if (existente != null) {
+            throw new Exception("Error: Ya existe un producto activo con el nombre '" + nombre + "'.");
+        }
+
         Producto nuevo = new Producto(nombre, precio, desc, stock, cat);
         dao.guardar(nuevo);
     }
