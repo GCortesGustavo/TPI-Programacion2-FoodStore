@@ -30,7 +30,9 @@ El proyecto utiliza un archivo de configuración centralizado:
 - `ui`: Interfaz de usuario por consola y validación de entrada.
 - `config`: Conexión Singleton con lectura de XML.
 
-## Enlace al video: [(Enlace al video)](https://www.youtube.com/watch?v=G9Z5NRj2l14)
+## [(Enlace al video)](https://www.youtube.com/watch?v=G9Z5NRj2l14)
+
+## [(Enlace a la documentación)]([https://www.youtube.com/watch?v=G9Z5NRj2l14](https://docs.google.com/document/d/12On_cgqfJPYwKFreFvClH86ogsbe8VQt7DAOMIju1wI/edit?usp=sharing))
 
 ## 👥 Integrantes
 * **Gustavo Cortés** 
