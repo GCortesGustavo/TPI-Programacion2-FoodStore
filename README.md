@@ -12,7 +12,6 @@ Proyecto Integrador para la materia **Programación 2** (Tecnicatura Universitar
 ### 1. Preparar la Base de Datos
 1. Abra su cliente MySQL (Workbench o consola).
 2. Ejecute el script SQL ubicado en `src/main/resources/schema.sql`. Esto creará la base de datos `food_store` y las tablas necesarias.
-3. (Opcional) Ejecute los datos de prueba si desea testear el sistema inmediatamente.
 
 ### 2. Configurar la Conexión
 El proyecto utiliza un archivo de configuración centralizado:
@@ -22,7 +21,7 @@ El proyecto utiliza un archivo de configuración centralizado:
 
 ### 3. Ejecución
 1. Realice un `Clean and Build` del proyecto para descargar el driver de MySQL mediante Maven.
-2. Ejecute la clase `com.foodstore.Main`.
+2. Ejecute la clase `foodstore.Main`.
 
 ## 📂 Estructura del Proyecto (Capas)
 - `entities`: Modelos de datos con herencia de la clase `Base`.
@@ -31,7 +30,7 @@ El proyecto utiliza un archivo de configuración centralizado:
 - `ui`: Interfaz de usuario por consola y validación de entrada.
 - `config`: Conexión Singleton con lectura de XML.
 
-## Enlace al video: (ACA VA EL LINK DEL VIDEO)
+## Enlace al video: [(Enlace al video)](https://www.youtube.com/watch?v=G9Z5NRj2l14)
 
 ## 👥 Integrantes
 * **Gustavo Cortés** 
